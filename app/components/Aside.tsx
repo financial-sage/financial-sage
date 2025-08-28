@@ -55,7 +55,7 @@ export default function Aside() {
   ];
 
   return (
-    <aside className="navbar navbar-vertical navbar-expand-lg" data-bs-theme="dark">
+    <aside className="navbar navbar-vertical navbar-expand-lg" >
       <div className="container-fluid">
         <button
           className="navbar-toggler"
