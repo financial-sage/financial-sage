@@ -21,12 +21,19 @@ export default function Login() {
             console.error("Error logging in:", error.message);
         } else {
             console.log("Login successful!");
-            redirect('http://localhost:3000/');
+            window.location.href = '/';
         }
     };
 
     const handleGoogleLogin = async () => {
-        const { error } = await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: 'http://localhost:3000/' } });
+        const baseUrl = process.env.NODE_ENV === 'production' 
+            ? process.env.NEXT_PUBLIC_BASE_URL || window.location.origin
+            : 'http://localhost:3000';
+        
+        const { error } = await supabase.auth.signInWithOAuth({ 
+            provider: 'google', 
+            options: { redirectTo: `${baseUrl}/` } 
+        });
         if (error) console.error("Error with Google login:", error.message);
     }
 

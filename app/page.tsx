@@ -1,7 +1,4 @@
-import Image from "next/image";
-import styles from "./page.module.css";
-
-import SessionClient from "./components/SessionClient";
+import SessionClient from "./pages/SessionClient";
 
 export default function Home() {
   return <SessionClient />;
