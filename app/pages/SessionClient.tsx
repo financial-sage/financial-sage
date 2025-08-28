@@ -101,6 +101,7 @@ export default function SessionClient(props: SessionClientProps) {
           height={300}
           loop={true}
           autoplay={true}
+          speed={0.2}
         />
         <h1 style={{ 
           background: 'linear-gradient(90deg, #c084fc, #67e8f9, #34d399)',
