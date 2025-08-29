@@ -69,7 +69,7 @@ export default function Header() {
   };
 
   return (
-    <header className="navbar navbar-expand-md d-print-none" >
+    <header className="navbar navbar-expand-md d-print-none">
       <div className="container-xl">
         {/* Toggle sidebar en móvil */}
         <button

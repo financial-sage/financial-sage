@@ -7,6 +7,7 @@ import { AppSession, mapSupabaseSessionToApp } from "../../lib/types";
 import LottieAnimation from "../components/LottieAnimation";
 import moneyAnimation from "../../public/animations/Money.json";
 import creditCardAnimation from "../../public/animations/credit-card.json";
+import budgetbillAnimation from "../../public/animations/Budget-Bills.json";
 
 
 interface SessionClientProps {}
@@ -96,7 +97,7 @@ export default function SessionClient(props: SessionClientProps) {
       }}>
         
         <LottieAnimation 
-          animationData={creditCardAnimation}
+          animationData={budgetbillAnimation}
           width={300}
           height={300}
           loop={true}
@@ -197,7 +198,7 @@ export default function SessionClient(props: SessionClientProps) {
             textAlign: 'center'
           }}>
             <h3 style={{ color: '#c084fc', margin: '0 0 0.5rem 0' }}>Estado</h3>
-            <p style={{ color: '#fff', margin: 0 }}>Activo</p>
+            <p style={{ color: 'rgb(109, 50, 245)', margin: 0 }}>Activo</p>
           </div>
           
           <div style={{
@@ -208,7 +209,7 @@ export default function SessionClient(props: SessionClientProps) {
             textAlign: 'center'
           }}>
             <h3 style={{ color: '#67e8f9', margin: '0 0 0.5rem 0' }}>Última sesión</h3>
-            <p style={{ color: '#fff', margin: 0 }}>Ahora</p>
+            <p style={{ color: 'rgb(109, 50, 245)', margin: 0 }}>Ahora</p>
           </div>
         </div>
       </div>

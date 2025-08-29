@@ -55,7 +55,7 @@ export default function Aside() {
   ];
 
   return (
-    <aside className="navbar navbar-vertical navbar-expand-lg" >
+    <aside className="navbar navbar-vertical navbar-expand-lg navbar-dark">
       <div className="container-fluid">
         <button
           className="navbar-toggler"
