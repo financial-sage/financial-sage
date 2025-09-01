@@ -1,8 +1,49 @@
-// Middleware disabled for client-side version
-export function middleware() {
-  // No middleware logic - let client-side handle auth
+import { createServerClient, type CookieOptions } from '@supabase/ssr';
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+
+export async function middleware(req: NextRequest) {
+  const res = NextResponse.next();
+
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return req.cookies.get(name)?.value;
+        },
+        set(name: string, value: string, options: CookieOptions) {
+          res.cookies.set({
+            name,
+            value,
+            ...options,
+          });
+        },
+        remove(name: string, options: CookieOptions) {
+          res.cookies.delete({
+            name,
+            ...options,
+          });
+        },
+      },
+    }
+  );
+
+  // Refresh session if expired - required for Server Components
+  const { data: { session } } = await supabase.auth.getSession();
+
+  // If there's no session and the user is trying to access protected routes
+  if (!session && (
+    req.nextUrl.pathname.startsWith('/transactions') ||
+    req.nextUrl.pathname.startsWith('/admin')
+  )) {
+    return NextResponse.redirect(new URL('/login', req.url));
+  }
+
+  return res;
 }
 
 export const config = {
-  matcher: [],
+  matcher: ['/transactions/:path*', '/admin/:path*', '/api/transactions/:path*'],
 }

@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "../../lib/supabaseClient";
+import { supabase } from "@/lib/supabaseClient";
 import { AppSession, mapSupabaseSessionToApp } from "../../lib/types";
-import LottieAnimation from "../components/LottieAnimation";
+import LottieAnimation from "../LottieAnimation";
 import moneyAnimation from "../../public/animations/Money.json";
 import creditCardAnimation from "../../public/animations/credit-card.json";
 import budgetbillAnimation from "../../public/animations/Budget-Bills.json";

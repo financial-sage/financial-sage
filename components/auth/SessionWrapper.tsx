@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { supabase } from "../../lib/supabaseClient";
+import { supabase } from "@/lib/supabaseClient";
 import { AppSession, mapSupabaseSessionToApp } from "../../lib/types";
-import Header from "./Header";
-import Aside from "./Aside";
-import Footer from "./Footer";
+import Header from "../layout/Header";
+import Aside from "../layout/Aside";
+import Footer from "../layout/Footer";
 import Script from "next/script";
 
 interface SessionWrapperProps {
