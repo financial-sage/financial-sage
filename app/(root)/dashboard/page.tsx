@@ -291,7 +291,7 @@ export default function DashboardPage() {
                         <td>2024-01-15</td>
                         <td>
                           <div className="d-flex py-1 align-items-center">
-                            <span className="avatar me-2" style={{backgroundImage: 'url(./static/avatars/000m.jpg)'}}></span>
+                            <span className="avatar me-2" ></span>
                             <div className="flex-fill">
                               <div className="font-weight-medium">Supermercado Central</div>
                               <div className="text-muted">Compra semanal</div>

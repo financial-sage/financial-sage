@@ -1,0 +1,216 @@
+
+### Análisis del Código Actual
+- **Fortalezas**:
+  - Manejo de sesión con `supabase.auth.getSession` y `onAuthStateChange` (robusto y reactivo).
+  - Diseño visual atractivo con gradientes, sombras, y animaciones Lottie (`budgetbillAnimation`, `creditCardAnimation`, `moneyAnimation`).
+  - Personalización con foto de perfil o inicial (de `user.metadata.picture`).
+  - Estado de carga (`loading`) bien implementado.
+- **Áreas a Mejorar**:
+  - Es más un perfil de usuario que una bienvenida informativa (falta guía sobre features).
+  - No incluye datos financieros ni CTA claros para empezar a usar la app.
+  - Mezcla lógica de autenticación con UI (podría separarse para reutilización).
+  - Estadísticas (estado, última sesión) son básicas y no motivan acción.
+
+### Rediseño Propuesto: `WelcomeInfo`
+El nuevo `WelcomeInfo` será un componente `client-side` que se integrará en `app/welcome/page.tsx`. Se centrará en:
+- Saludo personalizado con `full_name`.
+- Descripción de FinancialSage y sus features.
+- Consejo inicial y CTA a `/transactions`.
+- Uso de animaciones Lottie para engagement.
+- Mantenimiento de un diseño moderno y responsivo.
+
+#### Tareas para Rediseñar `WelcomeInfo`
+A continuación, te detallo las tareas para rediseñar y reemplazar `SessionClient` con `WelcomeInfo`. Marca cada una al completarla.
+
+##### 1. **Redefinir Requisitos Informativos**
+- **Objetivo**: Ajustar el contenido para ser educativo y motivacional.
+- **Contenido sugerido**:
+  - Saludo: "¡Bienvenido, [full_name]!"
+  - Descripción: "FinancialSage te ayuda a controlar tus finanzas con registro de gastos, categorías personalizadas y presupuestos inteligentes."
+  - Features: Lista con íconos (registro, categorías, presupuestos).
+  - Consejo: "Registra tu primer gasto para empezar a ahorrar."
+  - CTA: Botón "Comienza ahora" a `/transactions`.
+- **Acción**: Actualiza o crea `docs/welcome-info.md` con esta lista.
+- **Marca como hecha** cuando tengas los requisitos definidos. (Tiempo: 10 min).
+
+##### 2. **Crear el Nuevo Componente `WelcomeInfo`**
+- **Ubicación**: Reemplaza `SessionClient` con `WelcomeInfo` en `components/common/WelcomeInfo.tsx`.
+- **Código rediseñado**:
+  ```typescript
+  'use client';
+
+  import { useEffect, useState } from 'react';
+  import { useRouter } from 'next/navigation';
+  import { supabase } from '../../lib/supabaseClient';
+  import LottieAnimation from '../LottieAnimation';
+  import moneyAnimation from '../../public/animations/Money.json';
+  import { IconCoin, IconCategory, IconCalculator } from '@tabler/icons-react';
+
+  interface WelcomeInfoProps {
+    userId: string;
+    fullName: string;
+  }
+
+  export default function WelcomeInfo({ userId, fullName }: WelcomeInfoProps) {
+    const router = useRouter();
+    const [transactionCount, setTransactionCount] = useState<number>(0);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+      const fetchCount = async () => {
+        const { data, error } = await supabase
+          .from('transactions')
+          .select('id', { count: 'exact' })
+          .eq('user_id', userId);
+        if (error) console.error('Error fetching count:', error);
+        else setTransactionCount(data.length || 0);
+        setLoading(false);
+      };
+      fetchCount();
+    }, [userId]);
+
+    if (loading) {
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '50vh', gap: '1rem' }}>
+          <LottieAnimation animationData={moneyAnimation} width={120} height={120} loop={true} autoplay={true} />
+          <p style={{ color: '#8b5cf6', fontWeight: '600' }}>Cargando bienvenida...</p>
+        </div>
+      );
+    }
+
+    return (
+      <div style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
+        <LottieAnimation animationData={moneyAnimation} width={200} height={200} loop={true} autoplay={true} speed={0.5} />
+        <h1 style={{ 
+          background: 'linear-gradient(90deg, #c084fc, #67e8f9)', 
+          WebkitBackgroundClip: 'text', 
+          backgroundClip: 'text', 
+          color: 'transparent', 
+          fontSize: '2.5rem', 
+          fontWeight: '700', 
+          margin: '1rem 0' 
+        }}>
+          ¡Bienvenido, {fullName}! 👋
+        </h1>
+        <p style={{ color: '#475569', fontSize: '1.2rem', marginBottom: '1.5rem' }}>
+          FinancialSage te ayuda a controlar tus finanzas con registro de gastos, categorías personalizadas y presupuestos inteligentes.
+        </p>
+        <ul style={{ listStyle: 'none', padding: 0, marginBottom: '1.5rem' }}>
+          <li style={{ margin: '0.5rem 0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><IconCoin style={{ marginRight: '0.5rem', color: '#4CAF50' }} /> Registrar gastos e ingresos fácilmente</li>
+          <li style={{ margin: '0.5rem 0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><IconCategory style={{ marginRight: '0.5rem', color: '#F59E0B' }} /> Personalizar categorías a tu medida</li>
+          <li style={{ margin: '0.5rem 0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><IconCalculator style={{ marginRight: '0.5rem', color: '#10B981' }} /> Establecer presupuestos inteligentes</li>
+        </ul>
+        <p style={{ color: '#64748B', marginBottom: '1.5rem' }}>
+          Has registrado {transactionCount} transacciones. ¡Registra tu primer gasto para empezar a ahorrar!
+        </p>
+        <button
+          onClick={() => router.push('/transactions')}
+          style={{ 
+            padding: '12px 24px', 
+            backgroundColor: '#4CAF50', 
+            color: 'white', 
+            border: 'none', 
+            borderRadius: '8px', 
+            fontSize: '1.1rem', 
+            cursor: 'pointer', 
+            transition: 'background-color 0.3s' 
+          }}
+          onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#45A049')}
+          onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#4CAF50')}
+        >
+          Comienza ahora
+        </button>
+      </div>
+    );
+  }
+  ```
+- **Cambios clave**:
+  - Elimina la lógica de autenticación (se manejará en `app/welcome/page.tsx`).
+  - Enfoca en información: saludo, descripción, features con íconos, consejo, y CTA.
+  - Usa `moneyAnimation` como tema central (finanzas) y ajusta velocidades.
+  - Mejora estilos con gradientes, colores distintos por feature, y hover en el botón.
+- **Pre-requisito**: Asegúrate de tener `@tabler/icons-react` instalado (`npm install @tabler/icons-react`).
+- **Marca como hecha** al guardar y probar localmente con un usuario autenticado. (Tiempo: 25 min).
+
+##### 3. **Integrar la Página de Bienvenida**
+- **Ubicación**: Edita o crea `app/welcome/page.tsx` para usar `WelcomeInfo`.
+- **Código sugerido**:
+  ```typescript
+  import { supabase } from '../../lib/supabaseClient';
+  import { redirect } from 'next/navigation';
+  import WelcomeInfo from '../../components/common/WelcomeInfo';
+
+  export default async function Welcome() {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) redirect('/login');
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('full_name')
+      .eq('user_id', session.user.id)
+      .single();
+
+    if (!profile) {
+      // Opcional: Redirigir a completar perfil
+      return <p>Por favor, completa tu perfil.</p>;
+    }
+
+    return (
+      <div>
+        <WelcomeInfo userId={session.user.id} fullName={profile.full_name} />
+        <p style={{ textAlign: 'center', marginTop: '2rem', color: '#64748B' }}>
+          <a href="/dashboard" style={{ color: '#4CAF50', textDecoration: 'underline' }}>Ir al Dashboard →</a>
+        </p>
+      </div>
+    );
+  }
+  ```
+- **Explicación**: Maneja la autenticación en la página, pasa `userId` y `full_name` a `WelcomeInfo`, y añade un enlace al dashboard.
+- **Marca como hecha** al ver la página en http://localhost:3000/welcome tras login. (Tiempo: 15 min).
+
+##### 4. **Personalizar y Mejorar el Diseño**
+- **Estilos**: Ajusta colores (ej. gradiente de marca), fuentes, y responsividad (media queries).
+- **Ejemplo ajustado**:
+  ```typescript
+  // En WelcomeInfo.tsx, dentro del div principal
+  style={{ 
+    padding: '2rem', 
+    maxWidth: '800px', 
+    margin: '0 auto', 
+    textAlign: 'center',
+    '@media (max-width: 600px)': { padding: '1rem' }
+  }}
+  ```
+- **Animación**: Añade `creditCardAnimation` como fondo sutil si quieres más dinamismo:
+  ```typescript
+  <LottieAnimation animationData={creditCardAnimation} width={100} height={100} loop={true} autoplay={true} style={{ position: 'absolute', top: '10px', right: '10px', opacity: 0.3 }} />
+  ```
+- **Acción**: Aplica estos cambios y prueba en diferentes tamaños de pantalla.
+- **Marca como hecha** al mejorar el diseño. (Tiempo: 15 min).
+
+##### 5. **Probar y Depurar**
+- **Pruebas**: Inicia sesión con usuarios con y sin transacciones. Verifica que el conteo y el CTA funcionen.
+- **Depuración**: Si falla, revisa el console (ej. RLS bloqueando o `user_id` inválido). Añade manejo de errores:
+  ```typescript
+  if (error) return <p>Error cargando datos. Intenta de nuevo.</p>;
+  ```
+- **Marca como hecha** al confirmar que funciona correctamente. (Tiempo: 10 min).
+
+### Consideraciones Adicionales
+- **Separación**: Al mover la lógica de sesión a `app/welcome/page.tsx`, `WelcomeInfo` es puramente UI, cumpliendo tu deseo de independencia del dashboard.
+- **Personalización**: Si usas `profiles.preferred_currency`, ajusta el mensaje (ej. "Gastos en [moneda]").
+- **Escalabilidad**: Para más usuarios, limita el conteo (`limit: 1`) si el rendimiento lo requiere.
+
+### Integración con tu Estructura
+- **Ruta**: `/welcome` sigue tu `app/` actual. Ajusta middleware para redirigir a `/welcome` tras login.
+- **Animaciones**: Usa los JSON existentes (`Money.json`, `credit-card.json`, `Budget-Bills.json`) o sube nuevos desde lottiefiles.com.
+
+### Próximos Pasos
+- Tras completar (~1 hora), avanza a la **Fase 6: Categorías personalizables** o al **dashboard**.
+- Dime si quieres más animaciones, un diseño específico, o ayuda con el middleware.
+
+### Consejos desde .NET/Angular
+- **Como Angular**: `WelcomeInfo` es como un componente con template educativo y un servicio (Supabase).
+- **Errores comunes**: Si no carga, verifica `user_id` y RLS en `transactions`.
+
+Comparte tu lista de requisitos (tarea 1) o el código ajustado cuando lo tengas. ¿Quieres un gradiente de marca o más íconos? ¡Tu bienvenida informativa está tomando forma! 😊

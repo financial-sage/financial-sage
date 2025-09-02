@@ -29,7 +29,36 @@ export async function GET(request: NextRequest) {
     )
     const { error } = await supabase.auth.exchangeCodeForSession(code)
     if (!error) {
-      return NextResponse.redirect(`${origin}${next}`)
+      // Get the current session
+      const { data: { session } } = await supabase.auth.getSession()
+      if (session) {
+        // Check if profile exists
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('*')
+          .or(`user_id.eq.${session.user.id},id.eq.${session.user.id}`)
+          .single();
+
+        // If no profile exists, create one
+        if (!profile) {
+          const { error: insertError } = await supabase
+            .from('profiles')
+            .insert([
+              { 
+                user_id: session.user.id,
+                full_name: session.user.user_metadata?.full_name || '',
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString()
+              }
+            ]);
+          
+          if (insertError) {
+            console.error('Error creating profile:', insertError);
+            return NextResponse.redirect(`${origin}/welcome`);
+          }
+        }
+      }
+      return NextResponse.redirect(`${origin}/welcome`)
     }
   }
 
