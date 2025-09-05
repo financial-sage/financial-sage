@@ -1,11 +1,16 @@
-"use client";
-import { useEffect, useState } from "react";
+"use client"
+import React, { useState, useRef, useEffect } from "react";
+
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import { AppSession, mapSupabaseSessionToApp } from "@/lib/types";
 
 export default function Header() {
   const router = useRouter();
+
+  const [openDropdown, setOpenDropdown] = useState<"profile" | "notification" | null>(null);
+  const profileRef = useRef<HTMLDivElement>(null);
+  const notificationRef = useRef<HTMLDivElement>(null);
 
   const [session, setSession] = useState<AppSession | null>(null);
   const [imgSrc, setImgSrc] = useState<string | undefined>(undefined);
@@ -16,7 +21,7 @@ export default function Header() {
     { id: 3, text: "Backup completado", time: "hace 3 horas", unread: false },
   ]);
 
-    useEffect(() => {
+  useEffect(() => {
     let mounted = true;
 
     const fetchSession = async () => {
@@ -29,12 +34,18 @@ export default function Header() {
         router.push('/login');
       } else {
         const mapped = mapSupabaseSessionToApp(rawSession);
-        
+
         setSession(mapped);
+        // Mejorar la obtención de la imagen de perfil
+        const profilePicture = mapped?.user?.metadata?.picture ||
+          mapped?.user?.metadata?.avatar_url ||
+          mapped?.user?.metadata?.image ||
+          mapped?.user?.picture;
+
         setImgSrc(
-          typeof mapped?.user?.metadata?.picture === "string"
-            ? mapped.user.metadata.picture
-            : undefined
+          typeof profilePicture === "string" && profilePicture.trim() !== ""
+            ? profilePicture
+            : "/default-avatar.svg"
         );
       }
       setLoading(false);
@@ -42,15 +53,33 @@ export default function Header() {
 
     fetchSession();
 
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        profileRef.current && !profileRef.current.contains(event.target as Node) &&
+        notificationRef.current && !notificationRef.current.contains(event.target as Node)
+      ) {
+        setOpenDropdown(null);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
     const { data: sub } = supabase.auth.onAuthStateChange((_event, s) => {
       const mapped = mapSupabaseSessionToApp(s ?? null);
       if (!mapped) router.push('/login');
       else {
         setSession(mapped);
+        // Mejorar la obtención de la imagen de perfil
+        const profilePicture = mapped?.user?.metadata?.picture ||
+          mapped?.user?.metadata?.avatar_url ||
+          mapped?.user?.metadata?.image ||
+          mapped?.user?.picture;
+
         setImgSrc(
-          typeof mapped?.user?.metadata?.picture === "string"
-            ? mapped.user.metadata.picture
-            : undefined
+          typeof profilePicture === "string" && profilePicture.trim() !== ""
+            ? profilePicture
+            : "/default-avatar.svg"
         );
       }
     });
@@ -62,118 +91,85 @@ export default function Header() {
   }, [router]);
 
   if (loading) return <div>Cargando...</div>;
-  
+
   const handleLogout = () => {
     document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
     router.push("/login");
   };
 
   return (
-    <header className="navbar navbar-expand-md d-print-none">
-      <div className="container-xl">
-        {/* Toggle sidebar en móvil */}
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="offcanvas"
-          data-bs-target="#sidebar-menu"
-          aria-controls="sidebar-menu"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
-
-        {/* Logo/Brand (visible en móvil) */}
-        <h1 className="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">
-          <a href="/dashboard">
-          </a>
-        </h1>
-
-        {/* Barra de búsqueda */}
-        <div className="navbar-nav flex-row order-md-last">
-          {/* Búsqueda */}
-          <div className="nav-item d-none d-md-flex me-3">
-            <div className="btn-list">
-              <form className="d-flex" role="search">
-                <input
-                  className="form-control"
-                  type="search"
-                  placeholder="Buscar..."
-                  aria-label="Search"
-                />
-              </form>
-            </div>
+    <div className="header">
+      <div className="header-title">Financial Sage</div>
+      <div className="header-menu">
+        {/* <a className="menu-link is-active" href="#">Apps</a>
+        <a className="menu-link notify" href="#">Your work</a>
+        <a className="menu-link" href="#">Discover</a>
+        <a className="menu-link notify" href="#">Market</a> */}
+      </div>
+      <div className="search-bar">
+        <input type="text" placeholder="Search" />
+      </div>
+      <div className="header-profile">
+        <div className="notification-dropdown" ref={notificationRef}>
+          <div
+            className="notification-trigger"
+            tabIndex={0}
+            onClick={() => setOpenDropdown(openDropdown === "notification" ? null : "notification")}
+          >
+            <span className="notification-number">3</span>
+            <svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-bell">
+              <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0" />
+            </svg>
           </div>
-
-          {/* Notificaciones */}
-          <div className="nav-item dropdown d-none d-md-flex me-3">
-            <a
-              href="#"
-              className="nav-link px-0"
-              data-bs-toggle="dropdown"
-              tabIndex={-1}
-              aria-label="Show notifications"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="icon" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                <path d="M10 5a2 2 0 1 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6" />
-                <path d="M9 17v1a3 3 0 0 0 6 0v-1" />
+          <div className={`notification-menu${openDropdown === "notification" ? " show" : ""}`}>
+            <div className="notification-menu-title">Notificaciones</div>
+            <div className="notification-menu-divider"></div>
+            <div className="notification-item">
+              <svg className="item-icon" viewBox="0 0 24 24" width="18" height="18">
+                <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z" fill="currentColor" />
               </svg>
-              <span className="badge bg-red"></span>
-            </a>
-            <div className="dropdown-menu dropdown-menu-arrow dropdown-menu-end dropdown-menu-card">
-              <div className="card">
-                <div className="card-header">
-                  <h3 className="card-title">Últimas notificaciones</h3>
-                </div>
-                <div className="list-group list-group-flush list-group-hoverable">
-                  {notifications.map((notif) => (
-                    <div key={notif.id} className="list-group-item">
-                      <div className="row align-items-center">
-                        <div className="col-auto">
-                          <span className={`status-dot ${notif.unread ? 'status-dot-animated bg-red' : 'bg-green'} d-block`}></span>
-                        </div>
-                        <div className="col text-truncate">
-                          <a href="#" className="text-body d-block">{notif.text}</a>
-                          <div className="d-block text-secondary text-truncate mt-n1">
-                            {notif.time}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <span><strong>Nuevo mensaje</strong> de Juan Pérez</span>
+              <span className="profile-badge">1 min</span>
             </div>
-          </div>
-
-          {/* Usuario dropdown */}
-          <div className="nav-item dropdown">
-            <a
-              href="#"
-              className="nav-link d-flex lh-1 text-reset p-0"
-              data-bs-toggle="dropdown"
-              aria-label="Open user menu"
-            >
-              
-              <span className="avatar avatar-sm" style={{ backgroundImage: `url(${imgSrc || '/default-avatar.png'})` }}>
-              </span>
-              <div className="d-none d-xl-block ps-2">
-                <div>{session?.user?.full_name}</div>
-                <div className="mt-1 small text-secondary">{session?.user?.email}</div>
-              </div>
-            </a>
-            <div className="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-              <a href="#" className="dropdown-item">Estado</a>
-              <a href="/dashboard/profile" className="dropdown-item">Perfil</a>
-              <a href="#" className="dropdown-item">Configuración</a>
-              <div className="dropdown-divider"></div>
-              <button onClick={handleLogout} className="dropdown-item">
-                Cerrar sesión
-              </button>
+            <div className="notification-item">
+              <svg className="item-icon" viewBox="0 0 24 24" width="18" height="18">
+                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z" fill="currentColor" />
+              </svg>
+              <span>Actualización de sistema disponible</span>
+              <span className="profile-badge">5 min</span>
+            </div>
+            <div className="notification-item">
+              <svg className="item-icon" viewBox="0 0 24 24" width="18" height="18">
+                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" fill="currentColor" />
+              </svg>
+              <span>Tu perfil fue visitado</span>
+              <span className="profile-badge">10 min</span>
             </div>
           </div>
         </div>
+
+        <div className="profile-dropdown" ref={profileRef}>
+          <img
+            className="profile-img"
+            src={imgSrc || "/default-avatar.svg"}
+            alt="Profile"
+            tabIndex={0}
+            onClick={() => setOpenDropdown(openDropdown === "profile" ? null : "profile")}
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.src = "/default-avatar.svg";
+            }}
+          />
+          {/* <div className="d-none d-xl-block ps-2">
+            <div>{session?.user?.full_name}</div>
+            <div className="mt-1 small text-secondary">{session?.user?.email}</div>
+          </div> */}
+          <div className={`profile-menu${openDropdown === "profile" ? " show" : ""}`}>
+            <button className="profile-menu-item">View Profile</button>
+            <button className="profile-menu-item" onClick={handleLogout}>Cerrar sesión</button>
+          </div>
+        </div>
       </div>
-    </header>
+    </div>
   );
 }
