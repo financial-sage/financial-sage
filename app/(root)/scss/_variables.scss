@@ -5,6 +5,9 @@ $success: #10b981;
 $warning: #f59e0b;
 $error: #ef4444;
 
+// Typography
+$font-family-primary: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
 // Gradients
 $primary-gradient: linear-gradient(135deg, #0f172a 0%, #4c1d95 50%, #0f172a 100%);
 $button-gradient: linear-gradient(90deg, #{$primary}, #{$secondary});
@@ -22,6 +25,9 @@ $gray-rgb-dark: 255, 255, 255;
 
 // CSS Custom Properties for dynamic theming
 :root {
+  // Typography
+  --font-family-primary: #{$font-family-primary};
+  
   // Primary colors as CSS variables
   --color-primary: #{$primary};
   --color-secondary: #{$secondary};
