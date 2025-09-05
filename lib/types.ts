@@ -47,11 +47,20 @@ export function mapSupabaseSessionToApp(session: unknown): AppSession | null {
     : typeof userMeta?.name === 'string'
       ? (userMeta.name as string)
       : null;
+      
+  const picture = typeof userMeta?.picture === 'string'
+    ? (userMeta.picture as string)
+    : typeof userMeta?.avatar_url === 'string'
+      ? (userMeta.avatar_url as string)
+      : typeof userMeta?.image === 'string'
+        ? (userMeta.image as string)
+        : null;
 
   const appUser: AppUser = {
     id,
     email,
     full_name,
+    picture,
     role,
     created_at,
     metadata: userMeta,

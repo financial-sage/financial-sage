@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import { AppSession, mapSupabaseSessionToApp } from "@/lib/types";
+import { useUserImage } from "@/hooks/useUserImage";
 
 export default function Header() {
   const router = useRouter();
@@ -13,8 +14,8 @@ export default function Header() {
   const notificationRef = useRef<HTMLDivElement>(null);
 
   const [session, setSession] = useState<AppSession | null>(null);
-  const [imgSrc, setImgSrc] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(true);
+  const { imgSrc, isLoading: imageLoading, hasError: imageError } = useUserImage(session);
   const [notifications] = useState([
     { id: 1, text: "Nuevo pedido recibido", time: "hace 2 min", unread: true },
     { id: 2, text: "Usuario registrado", time: "hace 1 hora", unread: true },
@@ -34,58 +35,36 @@ export default function Header() {
         router.push('/login');
       } else {
         const mapped = mapSupabaseSessionToApp(rawSession);
-
         setSession(mapped);
-        // Mejorar la obtención de la imagen de perfil
-        const profilePicture = mapped?.user?.metadata?.picture ||
-          mapped?.user?.metadata?.avatar_url ||
-          mapped?.user?.metadata?.image ||
-          mapped?.user?.picture;
-
-        setImgSrc(
-          typeof profilePicture === "string" && profilePicture.trim() !== ""
-            ? profilePicture
-            : "/default-avatar.svg"
-        );
+        console.log('✅ Session set in fetchSession');
       }
       setLoading(false);
     };
 
-    fetchSession();
-
-    function handleClickOutside(event: MouseEvent) {
+    const handleClickOutside = (event: MouseEvent) => {
       if (
         profileRef.current && !profileRef.current.contains(event.target as Node) &&
         notificationRef.current && !notificationRef.current.contains(event.target as Node)
       ) {
         setOpenDropdown(null);
       }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
     };
+
     const { data: sub } = supabase.auth.onAuthStateChange((_event, s) => {
       const mapped = mapSupabaseSessionToApp(s ?? null);
       if (!mapped) router.push('/login');
       else {
         setSession(mapped);
-        // Mejorar la obtención de la imagen de perfil
-        const profilePicture = mapped?.user?.metadata?.picture ||
-          mapped?.user?.metadata?.avatar_url ||
-          mapped?.user?.metadata?.image ||
-          mapped?.user?.picture;
-
-        setImgSrc(
-          typeof profilePicture === "string" && profilePicture.trim() !== ""
-            ? profilePicture
-            : "/default-avatar.svg"
-        );
+        console.log('✅ Session set in onAuthStateChange');
       }
     });
 
+    fetchSession();
+    document.addEventListener("mousedown", handleClickOutside);
+
     return () => {
       mounted = false;
+      document.removeEventListener("mousedown", handleClickOutside);
       sub?.subscription?.unsubscribe?.();
     };
   }, [router]);
@@ -151,11 +130,12 @@ export default function Header() {
         <div className="profile-dropdown" ref={profileRef}>
           <img
             className="profile-img"
-            src={imgSrc || "/default-avatar.svg"}
+            src={imgSrc}
             alt="Profile"
             tabIndex={0}
             onClick={() => setOpenDropdown(openDropdown === "profile" ? null : "profile")}
             onError={(e) => {
+              console.log('Image error occurred, falling back to default avatar');
               const target = e.target as HTMLImageElement;
               target.src = "/default-avatar.svg";
             }}
