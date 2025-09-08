@@ -13,23 +13,6 @@ export default function DashboardPage() {
                 Dashboard
               </h2>
             </div>
-            <div className="col-auto ms-auto d-print-none">
-              <div className="btn-list">
-                <span className="d-none d-sm-inline">
-                  <a href="#" className="btn">
-                    Nueva transacción
-                  </a>
-                </span>
-                <a href="#" className="btn btn-primary d-none d-sm-inline-block">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="icon" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                    <path d="M12 5l0 14"/>
-                    <path d="M5 12l14 0"/>
-                  </svg>
-                  Crear reporte
-                </a>
-              </div>
-            </div>
           </div>
         </div>
       </div>

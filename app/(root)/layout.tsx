@@ -5,28 +5,34 @@
 import "./scss/globals.scss";
 
 //New
-import { useTheme } from '@/hooks/useTheme';
+import { ThemeProvider, useTheme } from '@/contexts/ThemeContext';
 import DarkLight from "@/components/layout/DarkLight";
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+function LayoutContent({ children }: { children: React.ReactNode }) {
   const { lightMode, toggleMode, mounted } = useTheme();
 
   // No renderizar el DarkLight hasta que esté montado para evitar hidratación
   if (!mounted) {
-    return (
-      <html lang="en">
-        <body>
-          {children}
-        </body>
-      </html>
-    );
+    return <div>{children}</div>;
   }
 
   return (
+    <>
+      <DarkLight lightMode={lightMode} toggleMode={toggleMode} />
+      {children}
+    </>
+  );
+}
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
     <html lang="en">
-      <body className={lightMode ? 'light-mode' : ''}>
-        <DarkLight lightMode={lightMode} toggleMode={toggleMode} />
-        {children}
+      <body>
+        <ThemeProvider>
+          <LayoutContent>
+            {children}
+          </LayoutContent>
+        </ThemeProvider>
       </body>
     </html>
   );
