@@ -1,0 +1,116 @@
+.categoriesView {
+  padding: 2rem;
+}
+
+.pageHeader {
+  .pagePretitle {
+    color: #6b7280;
+    margin-bottom: 0.5rem;
+  }
+
+  .pageTitle {
+    color: #e5e7eb;
+    font-size: 1.875rem;
+    font-weight: bold;
+    margin: 0;
+  }
+}
+
+.categoriesContent {
+  margin-top: 2rem;
+}
+
+.addCategorySection {
+  margin-bottom: 2rem;
+
+  .addCategoryBtn {
+    background: #8b5cf6;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background: #7c3aed;
+    }
+  }
+}
+
+.categoriesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+
+  .categoryCard {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-left-width: 4px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .categoryHeader {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+
+      .categoryColorIndicator {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin-right: 0.75rem;
+      }
+
+      .categoryName {
+        color: #e5e7eb;
+        margin: 0;
+        font-size: 1.1rem;
+      }
+    }
+
+    .categoryInfo {
+      .infoRow {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        .infoLabel {
+          color: #9ca3af;
+          font-size: 0.875rem;
+        }
+
+        .infoValue {
+          color: #e5e7eb;
+          font-weight: 500;
+
+          &.totalAmount {
+            font-weight: bold;
+            font-size: 1.1rem;
+
+            &.income {
+              color: #10b981;
+            }
+
+            &.expense {
+              color: #ef4444;
+            }
+          }
+        }
+      }
+    }
+  }
+}

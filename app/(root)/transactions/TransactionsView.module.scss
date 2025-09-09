@@ -1,0 +1,235 @@
+   .header {
+       text-align: center;
+       margin-bottom: 40px;
+       width: 100%;
+   }
+
+   .header h2 {
+       font-size: 2.5rem;
+       margin-bottom: 10px;
+       text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+       font-weight: 300;
+       color: var(--theme-color);
+   }
+
+   .header p {
+       font-size: 1.1rem;
+       opacity: 0.9;
+       color: var(--inactive-color);
+       font-weight: 300;
+   }
+
+   .timeline {
+       width: 95%;
+       position: relative;
+   }
+
+   /* Línea lateral del timeline - Estilo delgado */
+   .timeline::after {
+       content: '';
+       position: absolute;
+       width: 2px;
+       background: #764ba2;
+       backdrop-filter: blur(2px);
+       top: -17px;
+       bottom: -20px;
+       left: 32px;
+       z-index: -1;
+   }
+
+   .transaction {
+       padding: 0 0 0 70px;
+       position: relative;
+       width: 100%;
+       margin-bottom: 20px;
+       perspective: 1000px;
+   }
+
+   /* Contenedor de contenido con efecto glassmorphism */
+   .content {
+       padding: 10px 15px;
+       background: var(--theme-bg-color);
+       backdrop-filter: blur(12px);
+       border-radius: 10px;
+       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+       border: 1px solid var(--border-color);
+       transition: all 0.3s ease;
+       color: var(--theme-color);
+       display: flex;
+       align-items: center;
+       justify-content: space-between;
+       min-height: 70px;
+   }
+
+   .content:hover {
+       transform: translateY(-3px);
+       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+       background: var(--hover-menu-bg);
+       border: 1px solid var(--border-color);
+   }
+
+   /* Círculo indicador - Estilo delgado y elegante */
+   .transaction::after {
+       content: '';
+       position: absolute;
+       width: 16px;
+       height: 16px;
+       background: var(--theme-color);
+       border: 2px solid #764ba2;
+       border-radius: 50%;
+       top: 50%;
+       transform: translateY(-50%);
+       left: 23px;
+       z-index: 10;
+       transition: all 0.3s ease;
+       box-shadow: 0 0 0 4px rgba(118, 75, 162, 0.25);
+   }
+
+   .transaction:hover::after {
+       transform: translateY(-50%) scale(1.15);
+       background: #764ba2;
+       border-color: var(--theme-color);
+       box-shadow: 0 0 0 6px rgba(118, 75, 162, 0.35);
+   }
+
+   /* Información de la transacción */
+   .transactionInfo {
+       display: flex;
+       align-items: center;
+       flex: 1;
+   }
+
+   .icon {
+       width: 36px;
+       height: 36px;
+       display: flex;
+       align-items: center;
+       justify-content: center;
+       background: var(--content-bg);
+       border-radius: 50%;
+       margin-right: 15px;
+       font-size: 16px;
+       transition: all 0.3s ease;
+   }
+
+   .content:hover .icon {
+       background: var(--hover-menu-bg);
+       transform: scale(1.05);
+   }
+
+   .transactionDetails {
+       display: flex;
+       flex-direction: column;
+   }
+
+   .transactionTitle {
+       font-size: 1rem;
+       font-weight: 500;
+       margin-bottom: 4px;
+   }
+
+   .transactionMeta {
+       display: flex;
+       font-size: 0.85rem;
+       opacity: 0.8;
+       font-weight: 300;
+   }
+
+   .transactionDate {
+       margin-right: 15px;
+       display: flex;
+       align-items: center;
+   }
+
+   .transactionDate::before {
+       content: '📅';
+       margin-right: 5px;
+       font-size: 11px;
+   }
+
+   .transactionMethod {
+       display: flex;
+       align-items: center;
+   }
+
+   .transactionMethod::before {
+       content: '💳';
+       margin-right: 5px;
+       font-size: 11px;
+   }
+
+   /* Monto de la transacción */
+   .transactionAmount {
+       text-align: right;
+   }
+
+   .amount {
+       font-weight: 500;
+       font-size: 1.1rem;
+       margin-bottom: 4px;
+   }
+
+   .transactionStatus {
+       font-size: 0.8rem;
+       opacity: 0.8;
+       font-weight: 300;
+   }
+
+   .income {
+       color: var(--income-color);
+   }
+
+   .expense {
+       color: #ff9b9b;
+   }
+
+   /* Responsive */
+   @media screen and (max-width: 768px) {
+       .timeline::after {
+           left: 20px;
+       }
+
+       .transaction {
+           padding-left: 50px;
+       }
+
+       .transaction::after {
+           left: 13px;
+       }
+
+       .content {
+           padding: 12px 15px;
+           flex-direction: column;
+           align-items: flex-start;
+       }
+
+       .transactionInfo {
+           width: 100%;
+           margin-bottom: 10px;
+       }
+
+       .transactionAmount {
+           text-align: left;
+           width: 100%;
+           display: flex;
+           justify-content: space-between;
+       }
+   }
+
+   @media screen and (max-width: 480px) {
+       .transactionMeta {
+           flex-direction: column;
+       }
+
+       .transactionDate {
+           margin-bottom: 5px;
+       }
+
+       .header h1 {
+           font-size: 2rem;
+       }
+
+       .header p {
+           font-size: 1rem;
+       }
+   }
