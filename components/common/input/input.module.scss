@@ -40,11 +40,13 @@ $input-text-active: #BFD2FF;
     background-size: 500% auto;
     animation: gradient 3s linear infinite;
   }
+  
 
   select {
     border-style: none;
-    background: transparent;
+    background: #323647;
     outline: none;
+    padding: 5px 0px;
     flex-grow: 1;
     color: $input-text-active;
     font-size: 1.2rem;
@@ -57,9 +59,9 @@ $input-text-active: #BFD2FF;
     }
 
     option {
-      padding: 12px 15px;
-      font-size: 16px;
-      background-color: #333;
+      margin: 12px 15px;
+      font-size: 18px;
+      background-color: #323647;
       color: #fff;
     }
 
