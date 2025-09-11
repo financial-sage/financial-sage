@@ -9,6 +9,24 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400&display=swap');
 
+// CSS Custom Properties for dynamic theming
+:root {
+  // Typography
+  --font-family-primary: #{$font-family-primary};
+  
+  // Primary colors as CSS variables
+  --color-primary: #{$primary};
+  --color-secondary: #{$secondary};
+  --color-success: #{$success};
+  --color-warning: #{$warning};
+  --color-error: #{$error};
+  
+  // Gradients
+  --gradient-primary: #{$primary-gradient};
+  --gradient-button: #{$button-gradient};
+  --gradient-text: #{$text-gradient};
+}
+
 // Global font family
 * {
   font-family: $font-family-primary;

@@ -1,0 +1,373 @@
+// No import needed - using CSS custom properties directly
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(20px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 2rem;
+  
+  // Initial state - invisible
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  &.visible {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+.modalContainer {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+  
+  // Glassmorphism effect
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  backdrop-filter: saturate(180%) blur(20px);
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  
+  // Initial morphing animation state
+  transform: 
+    translate(
+      calc(var(--trigger-x, 50vw) - 50vw),
+      calc(var(--trigger-y, 50vh) - 50vh)
+    )
+    scale(0.1);
+  opacity: 0;
+  border-radius: 8px;
+  
+  // Animation properties
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-origin: center center;
+  
+  // When visible, expand to full modal
+  &.visible {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+    border-radius: 10px;
+  }
+  
+  // Smooth scrolling
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+  
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+  }
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem 1rem 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 0;
+}
+
+.modalTitle {
+  font-size: 1.75rem;
+  font-weight: 300;
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+  letter-spacing: -0.025em;
+}
+
+.closeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    transform: rotate(90deg);
+  }
+  
+  &:active {
+    transform: rotate(90deg) scale(0.95);
+  }
+  
+  svg {
+    width: 20px;
+    height: 20px;
+    stroke-width: 2;
+  }
+}
+
+.modalContent {
+  padding: 1rem 2rem 2rem 2rem;
+  
+  // Override form styles for glassmorphism theme
+  :global {
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 0.875rem;
+      letter-spacing: 0.025em;
+    }
+    
+    // input, select, textarea {
+    //   width: 100%;
+    //   padding: 0.875rem 1rem;
+    //   border: 1px solid rgba(255, 255, 255, 0.15);
+    //   border-radius: 12px;
+    //   background: rgba(255, 255, 255, 0.06);
+    //   color: white;
+    //   font-size: 0.95rem;
+    //   transition: all 0.2s ease;
+    //   backdrop-filter: blur(10px);
+      
+    //   &::placeholder {
+    //     color: rgba(255, 255, 255, 0.4);
+    //   }
+      
+    //   &:focus {
+    //     outline: none;
+    //     border-color: var(--color-primary);
+    //     background: rgba(255, 255, 255, 0.08);
+    //     box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+    //   }
+      
+    //   &:hover:not(:focus) {
+    //     border-color: rgba(255, 255, 255, 0.25);
+    //     background: rgba(255, 255, 255, 0.08);
+    //   }
+    // }
+    
+    button {
+      padding: 0.875rem 2rem;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      letter-spacing: 0.025em;
+      
+      &[type="submit"], &.primary {
+        background: var(--gradient-button);
+        color: white;
+        
+        &:hover:not(:disabled) {
+          transform: translateY(-1px);
+          box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+        }
+        
+        &:active:not(:disabled) {
+          transform: translateY(0);
+        }
+        
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+      }
+      
+      &.secondary {
+        background: rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        
+        &:hover {
+          background: rgba(255, 255, 255, 0.15);
+          color: white;
+        }
+      }
+    }
+    
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    // Transaction type selector
+    .transaction-type-selector {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      
+      button {
+        flex: 1;
+        padding: 0.75rem 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.05);
+        color: rgba(255, 255, 255, 0.7);
+        border-radius: 10px;
+        transition: all 0.2s ease;
+        
+        &.active {
+          background: var(--color-primary);
+          color: white;
+          border-color: var(--color-primary);
+        }
+        
+        &:hover:not(.active) {
+          background: rgba(255, 255, 255, 0.1);
+          color: rgba(255, 255, 255, 0.9);
+        }
+      }
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 640px) {
+  .modalOverlay {
+    padding: 1rem;
+  }
+  
+  .modalContainer {
+    max-height: 90vh;
+  }
+  
+  .modalHeader {
+    padding: 1.5rem 1.5rem 1rem 1.5rem;
+  }
+  
+  .modalTitle {
+    font-size: 1.5rem;
+  }
+  
+  .modalContent {
+    padding: 1rem 1.5rem 1.5rem 1.5rem;
+  }
+}
+
+// Animation for modal entrance
+@keyframes modalSlideIn {
+  from {
+    transform: translate(
+      calc(var(--trigger-x, 50vw) - 50vw),
+      calc(var(--trigger-y, 50vh) - 50vh)
+    ) scale(0.1);
+    opacity: 0;
+    border-radius: 8px;
+  }
+  
+  to {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+    border-radius: 10px;
+  }
+}
+
+// Animation for modal exit
+@keyframes modalSlideOut {
+  from {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+    border-radius: 10px;
+  }
+  
+  to {
+    transform: translate(
+      calc(var(--trigger-x, 50vw) - 50vw),
+      calc(var(--trigger-y, 50vh) - 50vh)
+    ) scale(0.1);
+    opacity: 0;
+    border-radius: 8px;
+  }
+}
+
+// Enhanced glassmorphism on hover
+.modalContainer:hover {
+  box-shadow: 
+    0 30px 60px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+// Loading state animation
+.modalContent {
+  :global {
+    .loading-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(2px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      border-radius: 10px;
+      
+      .spinner {
+        width: 32px;
+        height: 32px;
+        border: 3px solid rgba(255, 255, 255, 0.2);
+        border-top: 3px solid var(--color-primary);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+    }
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Improved morphing animation with better easing
+.modalContainer {
+  &:not(.visible) {
+    animation: modalSlideOut 0.4s cubic-bezier(0.4, 0, 0.8, 0.4) forwards;
+  }
+  
+  &.visible {
+    animation: modalSlideIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  }
+}
+
+

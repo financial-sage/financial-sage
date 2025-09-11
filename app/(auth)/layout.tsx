@@ -1,4 +1,4 @@
-import '../(root)/globals.css'
+import '../(root)/scss/globals.scss'
 
 export const metadata = {
   title: 'Financial Sage - Autenticación',

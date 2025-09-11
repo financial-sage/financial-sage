@@ -1,12 +1,20 @@
 import * as React from 'react';
+import { useRef, useState } from 'react';
 import styles from './DashboardView.module.scss';
 import TransactionsView from '../transactions/TransactionsView';
 import CreditCard from '@/components/dashboard/creditCard/creditCard';
 import BalanceCard from '@/components/dashboard/balanceCard/balanceCard';
+import CardsExample from './CardsExample';
+import { TransactionModal } from '@/components/common';
+import inputStyles from '@/components/common/input/input.module.scss';
 
 export default function DashboardView() {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const transactionButtonRef = useRef<HTMLButtonElement>(null);
+
     return (
         <div className={styles.dashboardView}>
+            <CardsExample />
             {/* Header */}
             <div className={styles.pageHeader}>
                 <div className={styles.pagePretitle}>
@@ -18,7 +26,7 @@ export default function DashboardView() {
             </div>
 
             <div className={styles.dashboardContent}>
-                <div className='grid grid-cols-3 grid-md-2 grid-lg-3 gap-6'>
+                <div className='grid grid-cols-4 grid-md-2 grid-lg-4 gap-6'>
                     <CreditCard />
                     <div className="card sm">
                         <div className="cardHeader">
@@ -35,7 +43,21 @@ export default function DashboardView() {
                         </div>
                         <div>
                             <BalanceCard />
+                        </div>
+                    </div>
+                    <div className="card sm">
+                        <div className="cardHeader">
+                            <h3 className="cardTitle">
+                                <i className="fas fa-chart-pie"></i>
+                                Balance
 
+                            </h3>
+                        </div>
+                        <div>
+                            <div className={inputStyles.webflowStyleInput}>
+                                <input type="text" />
+
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -54,12 +76,23 @@ export default function DashboardView() {
                             <TransactionsView />
                         </div>
                         <div className='cardFooter' style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                            Ver transacciones
+                            <button
+                                ref={transactionButtonRef}
+                                className={styles.morphingButton}
+                                onClick={() => setIsModalOpen(true)}
+                                type="button"
+                            >
+                                Ver transacciones
+                            </button>
                         </div>
                     </div>
                 </div>
 
-
+                <TransactionModal
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    triggerButtonRef={transactionButtonRef}
+                />
             </div>
         </div>
     );

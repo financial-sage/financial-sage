@@ -23,24 +23,6 @@ $background-dark: #0a0a0a;
 $foreground-dark: #ededed;
 $gray-rgb-dark: 255, 255, 255;
 
-// CSS Custom Properties for dynamic theming
-:root {
-  // Typography
-  --font-family-primary: #{$font-family-primary};
-  
-  // Primary colors as CSS variables
-  --color-primary: #{$primary};
-  --color-secondary: #{$secondary};
-  --color-success: #{$success};
-  --color-warning: #{$warning};
-  --color-error: #{$error};
-  
-  // Gradients
-  --gradient-primary: #{$primary-gradient};
-  --gradient-button: #{$button-gradient};
-  --gradient-text: #{$text-gradient};
-}
-
 // Dark theme colors
 $background-dark: #0a0a0a;
 $foreground-dark: #ededed;
