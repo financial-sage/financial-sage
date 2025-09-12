@@ -3,7 +3,8 @@
 import React from 'react';
 import styles from './DashboardTransactionsView.module.scss';
 import { useTransactionContext } from '@/contexts/TransactionContext';
-import { formatAmount, formatDate, getTransactionIcon, formatStatus } from '@/lib/utils/transactions';
+import { useCurrency } from '@/contexts/CurrencyContext';
+import { formatDate, getTransactionIcon, formatStatus } from '@/lib/utils/transactions';
 import { Transaction } from '@/lib/supabase/transactions';
 
 interface TransactionItemProps {
@@ -11,6 +12,8 @@ interface TransactionItemProps {
 }
 
 function TransactionItem({ transaction }: TransactionItemProps) {
+    const { formatAmountWithType } = useCurrency();
+    
     return (
         <div className={styles.transaction}>
             <div className={styles.content}>
@@ -31,7 +34,7 @@ function TransactionItem({ transaction }: TransactionItemProps) {
                 </div>
                 <div className={styles.transactionAmount}>
                     <div className={`${styles.amount} ${transaction.type === 'income' ? styles.income : styles.expense}`}>
-                        {formatAmount(transaction.amount, transaction.type)}
+                        {formatAmountWithType(transaction.amount, transaction.type)}
                     </div>
                     <div className={styles.transactionStatus}>
                         {formatStatus(transaction.status)}

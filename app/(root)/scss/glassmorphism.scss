@@ -17,7 +17,7 @@
   top: 100%;
   margin-top: 18px;
   min-width: 260px;
-  background: var(--gradient, rgba(30,30,45,0.95));
+  background: var(--theme-bg-color);
   border: 1px solid var(--border-color);
   border-radius: 10px;
   box-shadow: 0 4px 20px var(--shadow, rgba(0,0,0,0.3));
@@ -88,7 +88,7 @@
   top: 100%;
   margin-top: 10px;
   min-width: 180px;
-  background: var(--gradient, rgba(30,30,45,0.95));
+  background: var(--theme-bg-color);
   border: 1px solid var(--border-color);
   border-radius: 10px;
   box-shadow: 0 4px 20px var(--shadow, rgba(0,0,0,0.3));
@@ -121,13 +121,13 @@
   transition: background 0.2s, color 0.2s;
 }
 .profile-menu-item:hover {
-  background: var(--dropdown-hover, rgba(40,40,60,0.95));
+  background: var(var(--theme-bg-color));
   color: var(--primary, #2196f3);
 }
 
 .profile-menu-divider {
   height: 1px;
-  background: var(--border-color);
+  background: var(--theme-bg-color);
   margin: 8px 0;
   border-radius: 2px;
 }
@@ -154,7 +154,7 @@
   right: 0;
   top: 100%;
   margin-top: 13px;
-  background: var(--dropdown-bg);
+  background: var(--theme-bg-color);
   box-shadow: 0 4px 16px rgba(0,0,0,0.12);
   border-radius: 10px;
   min-width: 160px;
@@ -206,6 +206,8 @@
  --overlay-bg: rgba(36, 39, 59, 0.3);
  --scrollbar-bg: rgb(1 2 3 / 40%);
  --income-color: #8effa9;
+ --active-menu-bg: rgba(255, 255, 255, 0.082);
+  --active-menu-color: #ffffffb2;
 }
 
 .light-mode {
@@ -223,6 +225,8 @@
  --scrollbar-bg: rgb(255 253 253 / 57%);
  --content-title-color: --theme-color;
  --income-color: #25c54a;
+  --active-menu-bg: rgba(0 0 0 / 10%);
+  --active-menu-color: #ffffff;
 }
 
 @media screen and (prefers-color-scheme: dark) {

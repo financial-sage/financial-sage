@@ -7,6 +7,7 @@ import "./scss/globals.scss";
 //New
 import { ThemeProvider, useTheme } from '@/contexts/ThemeContext';
 import { TransactionProvider } from '@/contexts/TransactionContext';
+import { CurrencyProvider } from '@/contexts/CurrencyContext';
 import DarkLight from "@/components/layout/DarkLight";
 import Wrapper from "@/components/layout/Wrapper";
 import Header from "@/components/layout/Header";
@@ -87,11 +88,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <FastLoader />
         <ThemeProvider>
-          <TransactionProvider>
-            <LayoutContent>
-              {children}
-            </LayoutContent>
-          </TransactionProvider>
+          <CurrencyProvider>
+            <TransactionProvider>
+              <LayoutContent>
+                {children}
+              </LayoutContent>
+            </TransactionProvider>
+          </CurrencyProvider>
         </ThemeProvider>
       </body>
     </html>

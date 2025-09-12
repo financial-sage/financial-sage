@@ -4,6 +4,7 @@ export { default as Select } from './input/Select';
 export { default as TransactionModal } from './TransactionModal';
 export { default as ClientOnly } from './ClientOnly';
 export { default as ResourceLoader } from './ResourceLoader';
+export { default as CurrencySelector } from './CurrencySelector';
 
 // Tipos comunes
 export type { ButtonProps } from './Button';

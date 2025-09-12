@@ -1,11 +1,13 @@
 import styles from './creditCard.module.scss'
 import { useTransactionContext } from '@/contexts/TransactionContext'
+import { useCurrency } from '@/contexts/CurrencyContext'
 import { useSession } from '@/hooks/useSession'
 import { useMemo } from 'react'
 
 export default function CreditCard() {
     const { transactions } = useTransactionContext()
     const { session } = useSession()
+    const { formatAmount } = useCurrency()
     
     // Calcular saldo actual basado en transacciones
     const currentBalance = useMemo(() => {
@@ -38,11 +40,8 @@ export default function CreditCard() {
         return 'Usuario'
     }, [session])
     
-    // Formatear saldo
-    const formattedBalance = new Intl.NumberFormat('es-ES', {
-        style: 'currency',
-        currency: 'USD'
-    }).format(currentBalance)
+    // Formatear saldo usando el contexto de moneda
+    const formattedBalance = formatAmount(currentBalance)
     return (
         <div className={styles.creditCard}>
             {/* <div className={styles.circles}>

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import { AppSession, mapSupabaseSessionToApp } from "@/lib/types";
 import { useUserImage } from "@/hooks/useUserImage";
+import CurrencySelector from "@/components/common/CurrencySelector";
 
 export default function Header() {
   const router = useRouter();
@@ -89,6 +90,8 @@ export default function Header() {
         <input type="text" placeholder="Search" />
       </div>
       <div className="header-profile">
+        <CurrencySelector />
+        
         <div className="notification-dropdown" ref={notificationRef}>
           <div
             className="notification-trigger"

@@ -1,10 +1,26 @@
+import { Currency } from '@/contexts/CurrencyContext';
+
 /**
  * Formatea un monto para mostrar en la UI
+ * @deprecated Usar useCurrency().formatAmountWithType() en su lugar
  */
 export function formatAmount(amount: number, type: 'income' | 'expense'): string {
   const formattedAmount = new Intl.NumberFormat('es-ES', {
     style: 'currency',
     currency: 'USD',
+    minimumFractionDigits: 2,
+  }).format(amount);
+
+  return type === 'income' ? `+ ${formattedAmount}` : `- ${formattedAmount}`;
+}
+
+/**
+ * Formatea un monto con una moneda específica
+ */
+export function formatAmountWithCurrency(amount: number, type: 'income' | 'expense', currency: Currency): string {
+  const formattedAmount = new Intl.NumberFormat(currency.locale, {
+    style: 'currency',
+    currency: currency.code,
     minimumFractionDigits: 2,
   }).format(amount);
 
