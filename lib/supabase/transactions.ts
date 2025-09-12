@@ -39,7 +39,7 @@ export async function getUserTransactions(userId: string): Promise<TransactionRe
       .from('transactions')
       .select('*')
       .eq('user_id', userId)
-      .order('date', { ascending: false });
+      .order('date', { ascending: true });
 
     if (error) throw error;
     return { data: data as Transaction[] };
@@ -70,7 +70,8 @@ export async function addTransaction(userId: string, tx: NewTransaction): Promis
       ])
       .select()
       .maybeSingle();
-
+      console.log(data, error);
+      
     if (error) throw error;
     return { data: data as Transaction };
   } catch (error: any) {

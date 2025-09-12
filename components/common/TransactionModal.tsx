@@ -5,6 +5,7 @@ import { TransactionForm, type TransactionFormData } from '../transactions/Trans
 import { addTransaction } from '@/lib/supabase/transactions';
 import { supabase } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
+import { useTransactionContext } from '@/contexts/TransactionContext';
 
 interface TransactionModalProps {
   isOpen: boolean;
@@ -18,6 +19,7 @@ export default function TransactionModal({ isOpen, onClose, triggerButtonRef }: 
   const [shouldRender, setShouldRender] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const { addTransactionToList } = useTransactionContext();
 
   useEffect(() => {
     if (isOpen) {
@@ -59,11 +61,13 @@ export default function TransactionModal({ isOpen, onClose, triggerButtonRef }: 
         throw result.error;
       }
 
+      // Si la transacción se creó exitosamente, agregarla a la lista local
+      if (result.data && !Array.isArray(result.data)) {
+        addTransactionToList(result.data);
+      }
+
       // Close modal on success
       onClose();
-      
-      // Optionally refresh the page or emit an event to refresh transaction list
-      window.location.reload();
       
     } catch (error: any) {
       console.error('Error al agregar la transacción:', error.message);

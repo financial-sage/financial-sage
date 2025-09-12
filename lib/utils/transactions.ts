@@ -12,10 +12,29 @@ export function formatAmount(amount: number, type: 'income' | 'expense'): string
 }
 
 /**
- * Formatea una fecha para mostrar en la UI
+ * Formatea una fecha para mostrar en la UI (versión simple sin ajustes)
  */
-export function formatDate(dateString: string): string {
+export function formatDate(dateString: string, createdAt?: string): string {
   const date = new Date(dateString);
+  
+  // Mostrar la fecha tal como está guardada, sin ajustes automáticos
+  return new Intl.DateTimeFormat('es-ES', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'UTC', // Mostrar como UTC para evitar conversiones automáticas
+  }).format(date);
+}
+
+/**
+ * Formatea solo la fecha (sin hora) para mostrar en la UI
+ * Versión simplificada sin ajustes
+ */
+export function formatDateOnly(dateString: string, createdAt?: string): string {
+  const date = new Date(dateString);
+  
   return new Intl.DateTimeFormat('es-ES', {
     day: 'numeric',
     month: 'short',

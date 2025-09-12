@@ -64,7 +64,7 @@ export default function DashboardPage() {
                 <div className="grid grid-cols-3 grid-lg-3 gap-6" style={{ marginTop: '2rem' }}>
                     {/* Recent Transactions */}
                     <div className={`card sm ${styles.transactionsCard}`}>
-                        <div className="cardHeader">
+                        <div className="cardHeader" style={{ margin : '-1rem -1.5rem 0rem -1.5rem'}}>
                             <h3 className="cardTitle">
                                 <i className="fas fa-chart-pie"></i>
                                 Transacciones
@@ -74,7 +74,7 @@ export default function DashboardPage() {
                         <div>
                             <DashboardTransactionsView />
                         </div>
-                        <div className='cardFooter' style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        <div className='cardFooter' style={{ display: 'flex', justifyContent: 'flex-end', margin: '0rem -1.5rem -1rem -1.5rem' }}>
                             <button
                                 ref={transactionButtonRef}
                                 className={styles.morphingButton}

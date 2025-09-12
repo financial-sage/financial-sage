@@ -2,8 +2,7 @@
 
 import React from 'react';
 import styles from './TransactionsView.module.scss';
-import { useSession } from '@/hooks/useSession';
-import { useTransactions } from '@/hooks/useTransactions';
+import { useTransactionContext } from '@/contexts/TransactionContext';
 import { formatAmount, formatDate, getTransactionIcon, formatStatus } from '@/lib/utils/transactions';
 import { Transaction } from '@/lib/supabase/transactions';
 
@@ -25,7 +24,7 @@ function TransactionItem({ transaction }: TransactionItemProps) {
                         </div>
                         <div className={styles.transactionMeta}>
                             <span className={styles.transactionDate}>
-                                {formatDate(transaction.date)}
+                                {formatDate(transaction.date, transaction.created_at)}
                             </span>
                         </div>
                     </div>
@@ -122,11 +121,10 @@ function EmptyState() {
 }
 
 export default function TransactionsView() {
-    const { session, loading: sessionLoading } = useSession();
-    const { transactions, loading, error, refetch } = useTransactions(session?.user?.id || null);
+    const { transactions, loading, error, refetch } = useTransactionContext();
 
-    // Mostrar estado de carga si la sesión o las transacciones están cargando
-    if (sessionLoading || loading) {
+    // Mostrar estado de carga si las transacciones están cargando
+    if (loading) {
         return <LoadingState />;
     }
 
@@ -144,7 +142,7 @@ export default function TransactionsView() {
     return (
         <div>
             <div className={styles.timeline}>
-                {transactions.map((transaction) => (
+                {transactions.map((transaction: Transaction) => (
                     <TransactionItem 
                         key={transaction.id} 
                         transaction={transaction} 

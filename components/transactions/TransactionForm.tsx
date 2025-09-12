@@ -111,6 +111,7 @@ const NewCategoryModal = ({
 interface TransactionFormProps {
   onSubmit: (data: TransactionFormData) => void;
   isLoading?: boolean;
+  onSuccess?: () => void;
 }
 
 export interface TransactionFormData {
@@ -125,11 +126,13 @@ export interface TransactionFormData {
 export const TransactionForm: React.FC<TransactionFormProps> = ({
   onSubmit,
   isLoading = false,
+  onSuccess,
 }) => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedType, setSelectedType] = useState<'income' | 'expense'>('expense');
   const [isLoadingCategories, setIsLoadingCategories] = useState(true);
   const [showNewCategoryModal, setShowNewCategoryModal] = useState(false);
+  const [formKey, setFormKey] = useState(0); // Para forzar el reset del formulario
 
   const loadCategories = async () => {
     try {
@@ -159,19 +162,45 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     
-    onSubmit({
+    // Obtener la fecha del formulario y convertir correctamente
+    const dateValue = String(formData.get('date'));
+    let isoDate: string;
+    
+    if (dateValue) {
+      // El input datetime-local devuelve formato YYYY-MM-DDTHH:mm
+      // Lo interpretamos como hora local y lo convertimos a UTC
+      const localDate = new Date(dateValue);
+      isoDate = localDate.toISOString();
+    } else {
+      // Si no hay fecha, usar la fecha actual
+      isoDate = new Date().toISOString();
+    }
+    
+    const transactionData = {
       amount: Number(formData.get('amount')),
       description: String(formData.get('description')),
       category_id: String(formData.get('category')),
       type: selectedType,
-      date: String(formData.get('date')),
-      status: 'completed',
-    });
+      date: isoDate,
+      status: 'completed' as const,
+    };
+
+    onSubmit(transactionData);
+    
+    // Reset form after successful submit
+    if (onSuccess) {
+      onSuccess();
+    }
+    
+    // Reset form manually
+    e.currentTarget.reset();
+    setSelectedType('expense');
+    setFormKey(prev => prev + 1);
   };
 
   return (
     <>
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form key={formKey} onSubmit={handleSubmit} className="space-y-4">
           <Input
             name="amount"
             type="number"
@@ -232,10 +261,10 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
         
         <Input
           name="date"
-          type="date"
-          label="Fecha"
+          type="datetime-local"
+          label="Fecha y Hora"
           required
-          defaultValue={new Date().toISOString().split('T')[0]}
+          defaultValue={new Date().toISOString().slice(0, 16)}
         />
         
         <Button

@@ -2,8 +2,7 @@
 
 import React from 'react';
 import styles from './DashboardTransactionsView.module.scss';
-import { useSession } from '@/hooks/useSession';
-import { useTransactions } from '@/hooks/useTransactions';
+import { useTransactionContext } from '@/contexts/TransactionContext';
 import { formatAmount, formatDate, getTransactionIcon, formatStatus } from '@/lib/utils/transactions';
 import { Transaction } from '@/lib/supabase/transactions';
 
@@ -25,7 +24,7 @@ function TransactionItem({ transaction }: TransactionItemProps) {
                         </div>
                         <div className={styles.transactionMeta}>
                             <span className={styles.transactionDate}>
-                                {formatDate(transaction.date)}
+                                {formatDate(transaction.date, transaction.created_at)}
                             </span>
                         </div>
                     </div>
@@ -128,11 +127,10 @@ function EmptyState() {
 }
 
 export default function DashboardTransactionsView() {
-    const { session, loading: sessionLoading } = useSession();
-    const { transactions, loading, error, refetch } = useTransactions(session?.user?.id || null);
+    const { transactions, loading, error, refetch } = useTransactionContext();
 
-    // Mostrar estado de carga si la sesión o las transacciones están cargando
-    if (sessionLoading || loading) {
+    // Mostrar estado de carga si las transacciones están cargando
+    if (loading) {
         return <LoadingState />;
     }
 
@@ -146,11 +144,13 @@ export default function DashboardTransactionsView() {
         return <EmptyState />;
     }
 
-    // Mostrar las transacciones con scroll interno
+    // Mostrar las transacciones con scroll interno - limitamos a las últimas 5 para el dashboard
+    const recentTransactions = transactions.slice(0, 5);
+    
     return (
         <div className={styles.scrollContainer}>
             <div className={styles.timeline}>
-                {transactions.map((transaction) => (
+                {recentTransactions.map((transaction: Transaction) => (
                     <TransactionItem 
                         key={transaction.id} 
                         transaction={transaction} 

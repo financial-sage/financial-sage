@@ -8,6 +8,9 @@ interface UseTransactionsResult {
   loading: boolean;
   error: string | null;
   refetch: () => Promise<void>;
+  addTransactionToList: (transaction: Transaction) => void;
+  updateTransactionInList: (id: string, updatedTransaction: Partial<Transaction>) => void;
+  removeTransactionFromList: (id: string) => void;
 }
 
 export function useTransactions(userId: string | null): UseTransactionsResult {
@@ -46,10 +49,31 @@ export function useTransactions(userId: string | null): UseTransactionsResult {
     fetchTransactions();
   }, [userId]);
 
+  const addTransactionToList = (transaction: Transaction) => {
+    setTransactions(prev => [transaction, ...prev]);
+  };
+
+  const updateTransactionInList = (id: string, updatedTransaction: Partial<Transaction>) => {
+    setTransactions(prev => 
+      prev.map(transaction => 
+        transaction.id === id 
+          ? { ...transaction, ...updatedTransaction }
+          : transaction
+      )
+    );
+  };
+
+  const removeTransactionFromList = (id: string) => {
+    setTransactions(prev => prev.filter(transaction => transaction.id !== id));
+  };
+
   return {
     transactions,
     loading,
     error,
     refetch: fetchTransactions,
+    addTransactionToList,
+    updateTransactionInList,
+    removeTransactionFromList,
   };
 }

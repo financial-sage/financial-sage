@@ -61,17 +61,17 @@
     width: 2px;
     background: #764ba2;
     backdrop-filter: blur(2px);
-    top: -17px;
-    bottom: -20px;
+    top: 0px;
+    bottom: -5px;
     left: 32px;
     z-index: -1;
 }
 
 .transaction {
-    padding: 0 0 0 70px;
+    padding: 6px 0 0 70px;
     position: relative;
     width: 100%;
-    margin-bottom: 15px;
+    // margin-bottom: 15px;
     perspective: 1000px;
 
     &:last-child {
