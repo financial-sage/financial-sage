@@ -31,6 +31,15 @@
   width: 100%;
 }
 
+// Estilo específico para la card de transacciones en el dashboard
+.transactionsCard {
+  .cardBody {
+    padding: 0;
+    min-height: 320px;
+    max-height: 350px;
+  }
+}
+
 // Stat Cards
 .statCard {
   background: rgba(255, 255, 255, 0.05);

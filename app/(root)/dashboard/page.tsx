@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useRef, useState } from 'react';
 import styles from './Dashboard.module.scss';
-import TransactionsView from '../transactions/TransactionsView';
+import DashboardTransactionsView from '../transactions/DashboardTransactionsView';
 import CreditCard from '@/components/dashboard/creditCard/creditCard';
 import BalanceCard from '@/components/dashboard/balanceCard/balanceCard';
 import { TransactionModal } from '@/components/common';
@@ -63,7 +63,7 @@ export default function DashboardPage() {
                 {/* Main Content Grid */}
                 <div className="grid grid-cols-3 grid-lg-3 gap-6" style={{ marginTop: '2rem' }}>
                     {/* Recent Transactions */}
-                    <div className="card sm">
+                    <div className={`card sm ${styles.transactionsCard}`}>
                         <div className="cardHeader">
                             <h3 className="cardTitle">
                                 <i className="fas fa-chart-pie"></i>
@@ -72,7 +72,7 @@ export default function DashboardPage() {
 
                         </div>
                         <div>
-                            <TransactionsView />
+                            <DashboardTransactionsView />
                         </div>
                         <div className='cardFooter' style={{ display: 'flex', justifyContent: 'flex-end' }}>
                             <button
