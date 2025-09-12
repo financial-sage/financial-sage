@@ -70,7 +70,7 @@ const NewCategoryModal = ({
             value={formData.name}
             onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
             required
-            placeholder="ej. Supermercado, Gasolina, etc."
+            placeholder="ej. Supermercado, Gasolina, etc.1"
           />
           <Select
             name="color"

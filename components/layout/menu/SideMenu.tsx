@@ -2,6 +2,8 @@
 
 import { JSX } from "react";
 import { useNavigation } from "@/contexts/NavigationContext";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface MenuItem {
   icon: JSX.Element;
@@ -65,28 +67,28 @@ const menuItems: MenuItem[] = [
 ];
 
 export default function SideMenu() {
-  const { currentView, setCurrentView } = useNavigation();
-  
-  const handleMenuClick = (viewName: 'home' | 'dashboard' | 'transactions' | 'categories') => {
-    setCurrentView(viewName);
-  };
+  const { currentView } = useNavigation();
 
   return (
     <div className="side-menu">
-      {menuItems.map((item, idx) => (
-        <a 
-          key={idx}
-          onClick={() => handleMenuClick(item.viewName)}
-          className={`menu-item ${currentView === item.viewName ? "active" : ""}`}
-         
-        >
-          {item.icon}
-          {item.label}
-          {item.notification && (
-            <span className="notification-number updates">{item.notification}</span>
-          )}
-        </a>
-      ))}
+      {menuItems.map((item, idx) => {
+        const href = item.viewName === 'home' ? '/' : `/${item.viewName}`;
+        
+        return (
+          <Link 
+            key={idx}
+            href={href}
+            className={`menu-item ${currentView === item.viewName ? "active" : ""}`}
+            prefetch={true}
+          >
+            {item.icon}
+            {item.label}
+            {item.notification && (
+              <span className="notification-number updates">{item.notification}</span>
+            )}
+          </Link>
+        );
+      })}
     </div>
   );
 }

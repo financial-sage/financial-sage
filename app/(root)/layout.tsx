@@ -7,6 +7,11 @@ import "./scss/globals.scss";
 //New
 import { ThemeProvider, useTheme } from '@/contexts/ThemeContext';
 import DarkLight from "@/components/layout/DarkLight";
+import Wrapper from "@/components/layout/Wrapper";
+import Header from "@/components/layout/Header";
+import VideoBg from "@/components/common/VideoBg";
+import LeftSide from "@/components/layout/LeftSide";
+import { NavigationProvider } from '@/contexts/NavigationContext';
 
 function LayoutContent({ children }: { children: React.ReactNode }) {
   const { lightMode, toggleMode, mounted } = useTheme();
@@ -18,8 +23,19 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <DarkLight lightMode={lightMode} toggleMode={toggleMode} />
-      {children}
+      <VideoBg />
+      <div className="app">
+        <Header />
+        <DarkLight lightMode={lightMode} toggleMode={toggleMode} />
+        <NavigationProvider>
+          <div className="wrapper">
+            <LeftSide />
+            <div className="main-container">
+              {children}
+            </div>
+          </div>
+        </NavigationProvider>
+      </div>
     </>
   );
 }

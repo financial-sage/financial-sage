@@ -1,4 +1,7 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+'use client';
+
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 
 type ViewType = 'home' | 'dashboard' | 'transactions' | 'categories';
 
@@ -11,6 +14,20 @@ const NavigationContext = createContext<NavigationContextType | undefined>(undef
 
 export const NavigationProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [currentView, setCurrentView] = useState<ViewType>('home');
+  const pathname = usePathname();
+
+  // Sincronizar el estado con la URL actual
+  useEffect(() => {
+    if (pathname === '/') {
+      setCurrentView('home');
+    } else if (pathname === '/dashboard') {
+      setCurrentView('dashboard');
+    } else if (pathname === '/transactions') {
+      setCurrentView('transactions');
+    } else if (pathname === '/categories') {
+      setCurrentView('categories');
+    }
+  }, [pathname]);
 
   return (
     <NavigationContext.Provider value={{ currentView, setCurrentView }}>
