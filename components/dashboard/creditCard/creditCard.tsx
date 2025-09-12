@@ -31,13 +31,9 @@ export default function CreditCard() {
     const userName = useMemo(() => {
         if (session?.user?.email) {
             // Usar la parte antes del @ del email y formatearla como nombre
-            const emailName = session.user.email.split('@')[0]
+            const emailName = session.user.full_name
             // Reemplazar puntos y guiones bajos con espacios y capitalizar
             return emailName
-                .replace(/[._-]/g, ' ')
-                .split(' ')
-                .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-                .join(' ')
         }
         return 'Usuario'
     }, [session])
