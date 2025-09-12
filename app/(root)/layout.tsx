@@ -12,13 +12,53 @@ import Header from "@/components/layout/Header";
 import VideoBg from "@/components/common/VideoBg";
 import LeftSide from "@/components/layout/LeftSide";
 import { NavigationProvider } from '@/contexts/NavigationContext';
+import { ClientOnly } from '@/components/common';
+import FastLoader from '@/components/common/FastLoader';
 
 function LayoutContent({ children }: { children: React.ReactNode }) {
   const { lightMode, toggleMode, mounted } = useTheme();
 
-  // No renderizar el DarkLight hasta que esté montado para evitar hidratación
+  // Mostrar un loader muy básico solo si no está montado
   if (!mounted) {
-    return <div>{children}</div>;
+    return (
+      <div style={{ 
+        minHeight: '100vh', 
+        width: '100%', 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center',
+        background: 'linear-gradient(135deg, #0f172a 0%, #4c1d95 50%, #0f172a 100%)',
+        fontFamily: 'Inter, sans-serif'
+      }}>
+        <div style={{
+          padding: '20px',
+          borderRadius: '8px',
+          // background: 'linear-gradient(135deg, #0f172a 0%, #4c1d95 50%, #0f172a 100%)',
+          backdropFilter: 'blur(10px)',
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+          textAlign: 'center' as const
+        }}>
+          <div style={{
+            width: '24px',
+            height: '24px',
+            border: '2px solid #f3f3f3',
+            borderTop: '2px solid #6e34dbff',
+            borderRadius: '50%',
+            animation: 'spin 1s linear infinite',
+            margin: '0 auto 8px'
+          }}></div>
+          <div style={{ color: '#c7c6c6ff', fontSize: '14px' }}>Loading...</div>
+        </div>
+        <style dangerouslySetInnerHTML={{
+          __html: `
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+          `
+        }} />
+      </div>
+    );
   }
 
   return (
@@ -44,6 +84,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body>
+        <FastLoader />
         <ThemeProvider>
           <LayoutContent>
             {children}

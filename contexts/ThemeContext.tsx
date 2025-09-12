@@ -15,20 +15,33 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // Montar inmediatamente para reducir delay
     setMounted(true);
-    // Solo leer del localStorage después de que el componente esté montado
-    const savedMode = localStorage.getItem('lightMode');
-    if (savedMode !== null) {
-      setLightMode(savedMode === 'true');
-    }
+    
+    // Leer del localStorage de forma asíncrona para no bloquear
+    const timeoutId = setTimeout(() => {
+      const savedMode = localStorage.getItem('lightMode');
+      if (savedMode !== null) {
+        setLightMode(savedMode === 'true');
+      }
+    }, 0);
+
+    return () => clearTimeout(timeoutId);
   }, []);
 
   useEffect(() => {
-    if (mounted) {
+    if (mounted && typeof window !== 'undefined') {
       // Guardar en localStorage cada vez que cambie el modo
       localStorage.setItem('lightMode', lightMode.toString());
-      // Aplicar la clase al body
-      document.body.className = lightMode ? 'light-mode' : '';
+      // Aplicar la clase al body de forma más robusta
+      const body = document.body;
+      if (lightMode) {
+        body.classList.add('light-mode');
+        body.classList.remove('dark-mode');
+      } else {
+        body.classList.add('dark-mode');
+        body.classList.remove('light-mode');
+      }
     }
   }, [lightMode, mounted]);
 

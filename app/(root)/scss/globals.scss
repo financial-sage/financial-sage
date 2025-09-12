@@ -5,9 +5,10 @@
 @use "./_grid" as *;
 @use "./_cards" as *;
 
-@import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css";
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400&display=swap');
+// Fonts are now loaded in the root layout to prevent loading issues
+// @import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css";
+// @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+// @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400&display=swap');
 
 // CSS Custom Properties for dynamic theming
 :root {

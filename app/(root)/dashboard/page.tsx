@@ -1,11 +1,10 @@
 'use client';
 import * as React from 'react';
 import { useRef, useState } from 'react';
-import styles from './DashboardView.module.scss';
+import styles from './Dashboard.module.scss';
 import TransactionsView from '../transactions/TransactionsView';
 import CreditCard from '@/components/dashboard/creditCard/creditCard';
 import BalanceCard from '@/components/dashboard/balanceCard/balanceCard';
-import CardsExample from './CardsExample';
 import { TransactionModal } from '@/components/common';
 import inputStyles from '@/components/common/input/input.module.scss';
 

@@ -1,6 +1,13 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    optimizeCss: true,
+  },
+  compiler: {
+    // Enable SWC minification
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
   async redirects() {
     return [
       {
@@ -10,6 +17,8 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  // Optimize CSS and prevent FOUC (Flash of Unstyled Content)
+  poweredByHeader: false,
 };
 
 export default nextConfig;

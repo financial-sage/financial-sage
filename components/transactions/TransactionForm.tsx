@@ -199,7 +199,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
           label="Descripción"
           required
           maxLength={100}
-          placeholder="Descripción de la transacción"
+          placeholder="Descripción de la transacción 2"
         />
         
         <div className="space-y-1">
