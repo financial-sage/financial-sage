@@ -1,9 +1,10 @@
 // Import shared styles first (must be before @import)
-@use "./_variables" as *;
-@use "./_mixins" as *;
+@use "./variables" as *;
+@use "./mixins" as *;
 @use "./glassmorphism.scss" as *;
-@use "./_grid" as *;
-@use "./_cards" as *;
+@use "./grid" as *;
+@use "./cards" as *;
+@use "./buttons" as *;
 
 // Fonts are now loaded in the root layout to prevent loading issues
 // @import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css";

@@ -23,9 +23,11 @@ export default function DashboardPage() {
                     Dashboard
                 </h2>
             </div>
-
+            <div>
+                <button className='btn btn-gosht-success btn-sm' type='button'>Prueba</button>
+            </div>
             <div className={styles.dashboardContent}>
-                <div className='grid grid-cols-4 grid-md-2 grid-lg-4 gap-6'>
+                <div className='grid grid-md-2 grid-lg-4 gap-5'>
                     <CreditCard />
                     <div className="card sm">
                         <div className="cardHeader">
@@ -61,7 +63,7 @@ export default function DashboardPage() {
                     </div>
                 </div>
                 {/* Main Content Grid */}
-                <div className="grid grid-cols-3 grid-lg-3 gap-6" style={{ marginTop: '2rem' }}>
+                <div className="grid grid-md-2 grid-lg-3 gap-6" style={{ marginTop: '2rem' }}>
                     {/* Recent Transactions */}
                     <div className={`card sm ${styles.transactionsCard}`}>
                         <div className="cardHeader" style={{ margin : '-1rem -1.5rem 0rem -1.5rem'}}>
@@ -77,7 +79,7 @@ export default function DashboardPage() {
                         <div className='cardFooter' style={{ display: 'flex', justifyContent: 'flex-end', margin: '0rem -1.5rem -1rem -1.5rem' }}>
                             <button
                                 ref={transactionButtonRef}
-                                className={styles.morphingButton}
+                                className='btn btn-outline-primary btn-sm'
                                 onClick={() => setIsModalOpen(true)}
                                 type="button"
                             >

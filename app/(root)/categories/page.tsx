@@ -115,9 +115,9 @@ export default function Categories() {
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Categorías</h1>
         {!showForm && (
-          <Button onClick={() => setShowForm(true)}>
+          <button onClick={() => setShowForm(true)}>
             Nueva Categoría
-          </Button>
+          </button>
         )}
       </div>
 
@@ -127,15 +127,14 @@ export default function Categories() {
             <h2 className="text-xl font-semibold">
               {editingCategory ? 'Editar Categoría' : 'Nueva Categoría'}
             </h2>
-            <Button
-              variant="secondary"
+            <button
               onClick={() => {
                 setShowForm(false);
                 setEditingCategory(null);
               }}
             >
               Cancelar
-            </Button>
+            </button>
           </div>
           <CategoryForm
             onSubmit={handleSubmit}

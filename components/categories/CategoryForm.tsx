@@ -98,9 +98,9 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
         </div>
       </div>
       
-      <Button type="submit" isLoading={isLoading}>
+      <button type="submit">
         {mode === 'create' ? 'Crear Categoría' : 'Guardar Cambios'}
-      </Button>
+      </button>
     </form>
   );
 };

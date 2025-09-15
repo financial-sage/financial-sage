@@ -88,19 +88,20 @@ const NewCategoryModal = ({
             ]}
           />
           <div className="flex justify-end space-x-2 mt-4">
-            <Button
+            <button
               type="button"
-              variant="secondary"
+              className="btn btn-secondary"
               onClick={handleClose}
             >
               Cancelar
-            </Button>
-            <Button
+            </button>
+            <button
               type="submit"
-              isLoading={isLoading}
+              className="btn btn-primary"
+              disabled={isLoading}
             >
               Crear Categoría
-            </Button>
+            </button>
           </div>
         </form>
       </div>
@@ -249,13 +250,13 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                 helpText={isLoadingCategories ? 'Cargando categorías...' : undefined}
               />
             </div>
-            <Button
+            <button
               type="button"
-              variant="secondary"
+              className="btn btn-secondary"
               onClick={() => setShowNewCategoryModal(true)}
             >
               + Nueva
-            </Button>
+            </button>
           </div>
         </div>
         

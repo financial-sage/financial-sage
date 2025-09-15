@@ -47,20 +47,18 @@ export const CategoryList: React.FC<CategoryListProps> = ({
               </div>
               {!category.is_default && (
                 <div className="flex space-x-2">
-                  <Button
-                    size="sm"
-                    variant="secondary"
+                  <button
+                    className="btn btn-primary"
                     onClick={() => onEdit(category)}
                   >
                     Editar
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="danger"
+                  </button>
+                  <button
+                    className="btn btn-danger"
                     onClick={() => onDelete(category)}
                   >
                     Eliminar
-                  </Button>
+                  </button>
                 </div>
               )}
             </div>
